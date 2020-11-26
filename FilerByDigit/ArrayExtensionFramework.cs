@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FilterByDigit
@@ -17,7 +17,51 @@ namespace FilterByDigit
         /// <exception cref="ArgumentException">Thrown when array is empty.</exception>
         public static int[] FilterByPredicate(this int[] source)
         {
-            throw new NotImplementedException();
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source.Length == 0)
+            {
+                throw new ArgumentException("array is empty");
+            }
+
+            var digit = Digit;
+
+            int[] array = new int[source.Length];
+            var j = 0;
+
+            for (int i = 0; i < source.Length; i++)
+            {
+                if ((source[i] == int.MinValue || source[i] == int.MaxValue) && digit == 0)
+                {
+                    continue;
+                }
+
+                if (source[i] == int.MinValue && digit != 5)
+                {
+                    array[j] = source[i];
+                    j++;
+                    continue;
+                }
+
+                var temp = Math.Abs(source[i]);
+                do
+                {
+                    if (temp % 10 == digit)
+                    {
+                        array[j] = source[i];
+                        j++;
+                        break;
+                    }
+
+                    temp /= 10;
+                }
+                while (temp != 0);
+            }
+
+            return array[0..j];
         }
 
         /// <summary>
